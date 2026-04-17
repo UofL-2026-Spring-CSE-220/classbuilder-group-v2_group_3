@@ -71,4 +71,4 @@ public class Main {
         // Print the full record
         System.out.println(studentRecord);
     }
-}
+} dsdsdsd
