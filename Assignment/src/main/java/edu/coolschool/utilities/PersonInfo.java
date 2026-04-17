@@ -1,58 +1,115 @@
 package edu.coolschool.utilities;
 
+import edu.coolschool.utilities.dateutils.DateFormatOptionsEnum;
 import edu.coolschool.utilities.dateutils.DateRecord;
 
 public record PersonInfo(
         String firstName,
         String middleName,
         String lastName,
-        int birthDay,
-        int birthMonth,
-        int birthYear,
-        CountriesEnum countryOfResidence,
-        CountriesEnum countryOfBirth
+        DateRecord dateOfBirth,
+        CountriesEnum countryOfBirth,
+        CountriesEnum countryOfResidence
 ) {
-        public PersonInfo {
+
+    // Builder class for method chaining
+    public static class Builder {
+        private String firstName;
+        private String middleName;
+        private String lastName;
+        private DateRecord dateOfBirth;
+        private CountriesEnum countryOfBirth;
+        private CountriesEnum countryOfResidence;
+
+        public Builder setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder setMiddleName(String middleName) {
+            this.middleName = middleName;
+            return this;
+        }
+
+        public Builder setLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder setDateOfBirth(DateRecord dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
+
+        public Builder setCountryOfBirth(CountriesEnum country) {
+            this.countryOfBirth = country;
+            return this;
+        }
+
+        public Builder setCountryOfResidence(CountriesEnum country) {
+            this.countryOfResidence = country;
+            return this;
+        }
+
+        public PersonInfo build() {
+            // Validate first and last name
             if (firstName == null || firstName.isBlank()) {
-                throw new IllegalArgumentException("meaningless hard coded extremely bad error message");
+                throw new IllegalArgumentException(ErrorStrings.FIRST_NAME_BLANK.getMessage());
             }
             if (lastName == null || lastName.isBlank()) {
-                throw new IllegalArgumentException("meaningless hard coded extremely bad error message");
+                throw new IllegalArgumentException(ErrorStrings.LAST_NAME_BLANK.getMessage());
             }
 
-            if (countryOfResidence == null) {
-                throw new IllegalArgumentException("meaningless hard coded extremely bad error message");
+            // Validate date of birth
+            if (dateOfBirth == null) {
+                throw new IllegalArgumentException(ErrorStrings.NULL_DATE.getMessage());
             }
+
+            // Validate countries
             if (countryOfBirth == null) {
-                throw new IllegalArgumentException("meaningless hard coded extremely bad error message");
+                throw new IllegalArgumentException(ErrorStrings.NULL_COUNTRY_OF_BIRTH.getMessage());
             }
+            if (countryOfResidence == null) {
+                throw new IllegalArgumentException(ErrorStrings.NULL_COUNTRY.getMessage());
+            }
+
+            return new PersonInfo(firstName, middleName, lastName, dateOfBirth, countryOfBirth, countryOfResidence);
+        }
+    }
+
+    // Pretty-print with indentation for StudentRecord output
+    public String toString(int tabLevel) {
+        String indent = "\t".repeat(tabLevel);
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(indent).append("First Name: ").append(firstName).append("\n");
+
+        // Print middle name ONLY if it exists
+        if (middleName != null && !middleName.isBlank()) {
+            sb.append(indent).append("Middle Name: ").append(middleName).append("\n");
         }
 
+        sb.append(indent).append("Last Name: ").append(lastName).append("\n");
 
-        public String toString() {
-            return toString(0);
-        }
-        public String toString(int tabLevel) {
-            String indent = "\t".repeat(tabLevel);
-            StringBuilder sb = new StringBuilder();
-            sb.append(indent).append("Something pitiful happened here..this is not complete").append("\n");
-            return sb.toString();
-        }
+        sb.append(indent)
+                .append("Date of Birth: ")
+                .append(dateOfBirth.toString(DateFormatOptionsEnum.MM_DD_YYYY))
+                .append("\n");
 
-        public static void main(String[] args) {
-            DateRecord dob = new DateRecord(15, 3, 2024);
-            PersonInfo person = new PersonInfo.Builder()
-                    .setFirstName("John")
-                    .setMiddleName("Q")
-                    .setLastName("Public")
-                    .setDateOfBirth(dob)
-                    .setCountryOfResidence(CountriesEnum.US)
-                    .setCountryOfBirth(CountriesEnum.US)
-                    .build();
-            System.out.println(person.toString());
-        }
+        sb.append(indent)
+                .append("Country of Residence: ")
+                .append(countryOfResidence.getDisplayName())
+                .append("\n");
 
+        sb.append(indent)
+                .append("Country of Birth: ")
+                .append(countryOfBirth.getDisplayName())
+                .append("\n");
 
-
-
+        return sb.toString();
+    }
+    @Override
+    public String toString() {
+        return toString(0);
+    }
 }
