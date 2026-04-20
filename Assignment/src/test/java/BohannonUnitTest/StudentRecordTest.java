@@ -156,4 +156,37 @@ public class StudentRecordTest {
         assertTrue(output.contains("First Name: John"));
         assertTrue(output.contains("Last Name: Smith"));
     }
+    @Test
+    void buildThrowsExceptionWhenStudentIdIsNotAllDigits() {
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> new StudentRecord.Builder()
+                        .setStudentInfo(createValidPerson())
+                        .setStudentID("12345678A")
+                        .setEnrollmentDate(createValidEnrollmentDate())
+                        .build()
+        );
+        assertEquals(ErrorStrings.INVALID_STUDENT_ID.getMessage(), exception.getMessage());
+    }
+
+    @Test
+    void buildCreatesValidStudentRecordWithOnlyFather() {
+        PersonInfo fatherInfo = new PersonInfo.Builder()
+                .setFirstName("Robert")
+                .setLastName("Smith")
+                .setDateOfBirth(new DateRecord(10, 5, 1980))
+                .setCountryOfBirth(CountriesEnum.US)
+                .setCountryOfResidence(CountriesEnum.US)
+                .build();
+
+        StudentRecord record = new StudentRecord.Builder()
+                .setStudentInfo(createValidPerson())
+                .setStudentID("123456789")
+                .setEnrollmentDate(createValidEnrollmentDate())
+                .setFatherInfo(fatherInfo)
+                .build();
+
+        assertEquals(fatherInfo, record.fatherInfo());
+        assertNull(record.motherInfo());
+    }
 }
