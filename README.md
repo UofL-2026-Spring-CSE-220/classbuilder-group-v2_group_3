@@ -44,3 +44,7 @@ This assignment is worth 100 points.  Below is a general outline of how points w
 * 70 points for passing ALL unit tests on the GitHub workflow autograder
 
 No partial credit will be awarded for any of the categories above.  As a result there are only 4 possible scores for this assignment: 0, 10, 30, or 100.  The only way to receive a score of 100 is to meet all of the acceptance criteria listed above.  You must use git tags to trigger the autograder workflow on GitHub.
+
+
+
+Final commit for points
